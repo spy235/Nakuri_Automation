@@ -21,7 +21,7 @@ test.describe("Naukri Login", () => {
 
     await loginButton.click();
 
-    const profileLink = page.locator("//a[@href='/mnjuser/profile']");
+    const profileLink = page.locator("//a[text()='View']");
     await profileLink.waitFor({ state: "visible", timeout: 20000 });
     await profileLink.click();
     await page
