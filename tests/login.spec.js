@@ -3,6 +3,18 @@ import { test, expect } from "@playwright/test";
 
 test.describe("Naukri Login", () => {
   test("should successfully login with valid credentials", async ({ page }) => {
+
+    await page.addInitScript(() => {
+  // Remove Playwright fingerprints
+  Object.defineProperty(navigator, "webdriver", { get: () => false });
+  window.chrome = { runtime: {} };
+  Object.defineProperty(navigator, "plugins", {
+    get: () => [1],
+  });
+  Object.defineProperty(navigator, "language", {
+    get: () => "en-US",
+  });
+});
     // Navigate to Naukri login page
     await page.goto("https://www.naukri.com/nlogin/login");
 
@@ -10,13 +22,12 @@ test.describe("Naukri Login", () => {
     await page.waitForTimeout(2000);
 
     // Enter Email ID / Username
-    const emailInput = page.locator('input[placeholder*="Email"]');
-    await emailInput.fill("yashasyash1234@gmail.com");
+    const emailInput = await page.locator('input[placeholder*="Email"]');
+    await emailInput.fill(process.env.EMAIL);
 
     // Enter Password
     const passwordInput = page.locator('input[type="Password"]');
-    await passwordInput.fill("Yashas@235@");
-
+    await passwordInput.fill(process.env.PASSWORD);
     // Click Login button
     const loginButton = page.locator('button:has-text("Login")').first();
     await loginButton.click();
