@@ -11,24 +11,16 @@ test("Naukri Auto Login & Headline Update", async ({ page }) => {
   await page.fill('input[type="password"]', process.env.PASSWORD);
 
   // Wait until Login button becomes enabled
-  const loginBtn = page.locator('button:has-text("Login")');
+  const loginBtn = page.locator("//button[@type='submit'][text()='Login']");
   await loginBtn.waitFor({ state: "visible" });
   await expect(loginBtn).toBeEnabled({ timeout: 20000 });
 
   await loginBtn.click();
 
-  // Wait for navigation to dashboard
-  await page.waitForNavigation({ waitUntil: "networkidle" });
-
   // OPEN SIDE MENU (this ALWAYS works in CI)
-  const menuIcon = page.locator("div.nI-gNb-drawer__icon").first();
+  const menuIcon = page.locator("//div[@class='view-profile-wrapper']//a")
   await menuIcon.waitFor({ state: "visible", timeout: 30000 });
   await menuIcon.click();
-
-  // CLICK “View & Update Profile”
-  const profileOption = page.locator("a:has-text('View & Update Profile')");
-  await profileOption.waitFor({ state: "visible", timeout: 30000 });
-  await profileOption.click();
 
   // CLICK EDIT ON RESUME HEADLINE
   const editHeadline = page.locator("//span[text()='Resume headline']/..//span[contains(@class,'edit')]");
@@ -49,7 +41,7 @@ test("Naukri Auto Login & Headline Update", async ({ page }) => {
   await page.fill("#resumeHeadline", randomHeadline);
 
   // Save button
-  const saveButton = page.locator("//button[text()='Save']");
+  const saveButton = page.locator("//form//button[text()='Save']");
   await saveButton.waitFor({ state: "visible", timeout: 20000 });
   await saveButton.click();
 
