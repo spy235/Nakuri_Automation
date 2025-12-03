@@ -4,20 +4,25 @@ test.use({ headless: false });
 
 test("Naukri Auto Login & Headline Update", async ({ page }) => {
 
-  // Remove Playwright fingerprints (important for CI)
-  await page.addInitScript(() => {
-    Object.defineProperty(navigator, "webdriver", { get: () => false });
-    window.chrome = { runtime: {} };
+await page.addInitScript(() => {
+  Object.defineProperty(navigator, "webdriver", { get: () => undefined });
+  window.navigator.chrome = { runtime: {} };
+  Object.defineProperty(navigator, 'plugins', {
+    get: () => [1, 2, 3, 4],
   });
+  Object.defineProperty(navigator, 'languages', {
+    get: () => ['en-US', 'en'],
+  });
+});
 
   await page.goto("https://www.naukri.com/nlogin/login", {
     waitUntil: "domcontentloaded",
   });
 
   // Fill login form
-  await page.fill('input[placeholder*="Email"]', process.env.EMAIL);
+  await page.locator('input[placeholder*="Email"]').pressSequentially(process.env.EMAIL, {delay: 120});
   await page.waitForTimeout(600);
-  await page.fill('input[type="password"]', process.env.PASSWORD);
+await page.locator('input[type="password"]').pressSequentially(process.env.PASSWORD, {delay: 140});
   await page.waitForTimeout(600);
 
   // Correct login button
@@ -66,6 +71,8 @@ test("Naukri Auto Login & Headline Update", async ({ page }) => {
     headlines[Math.floor(Math.random() * headlines.length)];
 
   await page.fill("#resumeHeadline", randomHeadline);
+await page.mouse.move(200 + Math.random()*50, 300 + Math.random()*20);
+await page.waitForTimeout(500 + Math.random()*700);
 
   // Save button
   const saveButton = page.locator("//form//button[text()='Save']");

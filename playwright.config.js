@@ -29,7 +29,21 @@ export default defineConfig({
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: "on-first-retry",
     screenshot:"only-on-failure",
-    headless:false
+    headless:false,
+        launchOptions: {
+      args: [
+        "--disable-blink-features=AutomationControlled",
+        "--disable-infobars",
+        "--disable-web-security",
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--disable-dev-shm-usage",
+        "--disable-gpu",
+        "--disable-extensions",
+        "--incognito",
+        "--start-maximized"
+      ],
+    }
   },
 
   /* Configure projects for major browsers */
